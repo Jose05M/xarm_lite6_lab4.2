@@ -48,6 +48,7 @@ The system is made up of three blocks, described in detail in `Robotics Control 
 - Ubuntu 22.04
 - ROS 2 Humble
 - [`xarm_ros2`](https://github.com/xArm-Developer/xarm_ros2) (UFACTORY), with xArm Lite 6 support and the `xarm_moveit_servo` package
+- [`pymoveit2`](https://github.com/AndrejOrsula/pymoveit2)
 - Python dependencies: `numpy`, `pynput` (`sudo apt install python3-pynput` or via `rosdep`), `tf2_ros` (ships with ROS 2)
 
 ## Workspace installation / setup
