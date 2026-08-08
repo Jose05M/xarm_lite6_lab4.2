@@ -1,6 +1,3 @@
-
-
-
 #!/usr/bin/env python3
 import math
 import numpy as np
@@ -28,7 +25,7 @@ class CircleServoXArmLite6(Node):
 
     def __init__(self):
         super().__init__("circle_servo_xarm_lite6")
-        self.csv_file = open("tracking_data_gauss.csv", "w", newline="")
+        self.csv_file = open("tracking_data.csv", "w", newline="")
         self.csv_writer = csv.writer(self.csv_file)
 
         self.csv_writer.writerow([
