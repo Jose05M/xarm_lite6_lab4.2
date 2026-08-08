@@ -26,7 +26,6 @@ setup(
       	'console_scripts': [
         'perturbation_injector = xarm_perturbations.perturbation_injector:main',
         'circle_maker = xarm_perturbations.circle_maker:main',
-        'control = xarm_perturbations.control:main',
     	],
     },
 
