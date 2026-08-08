@@ -64,9 +64,25 @@ source install/setup.bash
 
 ## How to launch it
 
-First bring up MoveIt Servo for the xArm Lite 6 (real robot or simulation), and once it's running, launch this package's nodes in other terminal(s).
+First move the arm to a safe starting pose, then bring up MoveIt Servo for the xArm Lite 6 (real robot or simulation), and once it's running, launch this package's nodes in other terminal(s).
 
-1. **With the real robot** (make sure the controller is powered on and reachable on the network, and always keep the emergency stop button within reach):
+1. **Move the robot to a starting pose.** Before starting MoveIt Servo, the arm should be at a known, safe joint configuration — otherwise the circle gets centered on whatever pose the robot happens to be in, which may be too close to a singularity, a joint limit, or the edge of the workspace. Bring up regular MoveIt (not Servo) for this:
+
+   ```bash
+   ros2 launch xarm_moveit_config lite6_moveit_realmove.launch.py robot_ip:=192.168.1.179
+   ```
+
+   Adjust `robot_ip` to the arm controller's actual IP.
+
+   **If the physical robot isn't available**, use the simulation/fake-hardware equivalent instead (no `robot_ip` needed):
+
+   ```bash
+   ros2 launch xarm_moveit_config lite6_moveit_fake.launch.py
+   ```
+
+   In RViz, under the MotionPlanning panel's **"Group joints of start state"** section, set each joint to a suitable starting value — for example the pose used for these tests (`joint1=0°, joint2=9°, joint3=44°, joint4=0°, joint5=35°, joint6=0°`) — then hit **Plan & Execute** to move the real (or simulated) robot there. Once it reaches that pose, close this MoveIt session before continuing to step 2.
+
+2. **Launch MoveIt Servo.** With the real robot (make sure the controller is powered on and reachable on the network, and always keep the emergency stop button within reach):
 
    ```bash
    ros2 launch xarm_moveit_servo lite6_moveit_servo_realmove.launch.py robot_ip:=192.168.1.123
@@ -82,7 +98,7 @@ First bring up MoveIt Servo for the xArm Lite 6 (real robot or simulation), and 
 
    Either option leaves MoveIt Servo's `servo_server` running, ready to receive `TwistStamped` commands on `/servo_server/delta_twist_cmds`.
 
-2. **Run the main controller** (generates the circle and corrects the error via PD), in another terminal with the workspace already *sourced*:
+3. **Run the main controller** (generates the circle and corrects the error via PD), in another terminal with the workspace already *sourced*:
 
    ```bash
     ros2 run xarm_perturbations circle_maker --ros-args   -p radius:=0.06   -p frequency:=0.06   -p plane:=xy   -p hold_z:=true
@@ -90,7 +106,7 @@ First bring up MoveIt Servo for the xArm Lite 6 (real robot or simulation), and 
 
    The end-effector will start tracing the circle around its initial pose. Use `p`/`h` from that terminal to pause/go home.
 
-3. **(Optional) Inject a perturbation**, in a third terminal, while `circle_maker` keeps running:
+4. **Inject a perturbation**, in another terminal, while `circle_maker` keeps running:
 
    ```bash
    ros2 run xarm_perturbations perturbation_injector --ros-args -p mode:=sine -p sine_freq_hz:=8.0 -p sine_amp_linear:=0.02
@@ -98,7 +114,7 @@ First bring up MoveIt Servo for the xArm Lite 6 (real robot or simulation), and 
 
    Switch `mode` to `gaussian` (with `noise_std_linear`) for the stochastic perturbation, or to `off` to disable it without killing the node.
 
-4. **(Optional) Watch the plots live**, in a fourth terminal, with `rqt_plot` (same as the screenshots in `Robotics Control Lab 4.2.pdf`):
+5. **(Optional) Watch the plots live**, in another terminal, with `rqt_plot` (same as the screenshots in `Robotics Control Lab 4.2.pdf`):
 
    ```bash
    ros2 run rqt_plot rqt_plot
