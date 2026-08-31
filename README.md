@@ -112,6 +112,10 @@ First move the arm to a safe starting pose, then bring up MoveIt Servo for the x
    ```bash
    ros2 run xarm_perturbations perturbation_injector --ros-args -p mode:=sine -p sine_freq_hz:=8.0 -p sine_amp_linear:=0.02
    ```
+   or 
+   ```bash
+   ros2 run xarm_perturbations perturbation_injector --ros-args -p output_topic:=/servo_server/delta_twist_cmds -p pub_reliability:=reliable -p enable:=true -p mode:=gaussian -p gauss_std_linear:=0.005 -p gauss_axis:=xy -p base_linear:="[0.0,0.0,0.0]" -p debug:=true
+   ```
 
    Switch `mode` to `gaussian` (with `noise_std_linear`) for the stochastic perturbation, or to `off` to disable it without killing the node.
 
